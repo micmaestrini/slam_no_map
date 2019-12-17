@@ -14,7 +14,7 @@ end
 function Best = JCBB_R (prediction, observations, compatibility, H, i, Best)
 %
 % disp('entering function');
-if pairings(Best)<100
+if pairings(Best)<1000
 %-------------------------------------------------------
 if i > observations.m % leaf node?
     if pairings(H) > pairings(Best) % did better?

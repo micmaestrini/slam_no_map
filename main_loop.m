@@ -7,7 +7,7 @@ Opt.Nup=10;
 Opt.Nnew=[10,3];
 
 % set initial frame for ekf process estimation:
-start_frame=7;
+start_frame=1;
 if start_frame~=1
     tf=(start_frame-1)*dt;
     options=odeset('AbsTol',1e-10,'RelTol',1e-12);
@@ -24,52 +24,52 @@ end
 % yn.feats=feats{loop};
 
 
-load('meas.mat');
+% load('meas.mat');
+% 
+% %% preprocessing measures:
+% for i=1:size(measures,1)
+%     measures{i}([1,3],:)=measures{i}([1,3],:)-cam_params.hpix/2;
+%     measures{i}([2,4],:)=-measures{i}([2,4],:)+cam_params.vpix/2;
+% end
 
-%% preprocessing measures:
-for i=1:size(measures,1)
-    measures{i}([1,3],:)=measures{i}([1,3],:)-cam_params.hpix/2;
-    measures{i}([2,4],:)=-measures{i}([2,4],:)+cam_params.vpix/2;
-end
-
-%%
+% %%
 % tf=Nmax*dt;
 % 
 %     % setting tolerance for numerical integration:
 %         options=odeset('AbsTol',1e-10,'RelTol',1e-12);
 %     % ode integration:
-%         [T,Y]=ode113(@(t,y) process(t,y),[0,tf],x0,options);
+%         [T,Y]=ode113(@(t,y) process(t,y,params),[0,tf],x0,options);
 %         
 %         for i=1:size(Y,1)
-%             [y]=sim_measure(Y(i,:)',fv,fv2,cam_params,qc);
-%             
-%             xr=Y(i,1);
-%             yr=Y(i,2);
-%             zr=Y(i,3);
-%             theta=Y(i,9);
-%             s=Y(i,14:16)';
-%             s1=s(1);
-%             s2=s(2);
-%             s3=s(3);
-% 
-%         % define skew symmetric matrix as cross(s,.).
-%             skew_s=[0,-s3,s2;s3,0,-s1;-s2,s1,0];
-%         % define DCM that brings from chaser to target frame D:
-%             D=eye(3)+8*(skew_s*skew_s)/(1+transpose(s)*s)^2-4*(1-transpose(s)*s)/(1+transpose(s)*s)^2*skew_s;
-%         % D' is DCM from target to chaser:
-%             D=D';
-%             C_BI=quat2dcm(qc);
-%             C_LI=[cos(theta),sin(theta),0;-sin(theta),cos(theta),0;0,0,1];
-%             C_BL=C_BI*C_LI';
-%         % S is the array containing all points in the complete model:
-%             P_i=C_BL'*D*fv2.Points'+[xr;yr;zr];
-%             fv_new2=triangulation(fv2.ConnectivityList,P_i');
-%             trisurf(fv_new2)
-%             hold on
+%             [y]=sim_measure(xn,fv,fv2,cam_params,MASK);
+% %             
+% %             xr=Y(i,1);
+% %             yr=Y(i,2);
+% %             zr=Y(i,3);
+% %             theta=Y(i,9);
+% %             s=Y(i,14:16)';
+% %             s1=s(1);
+% %             s2=s(2);
+% %             s3=s(3);
+% % 
+% %         % define skew symmetric matrix as cross(s,.).
+% %             skew_s=[0,-s3,s2;s3,0,-s1;-s2,s1,0];
+% %         % define DCM that brings from chaser to target frame D:
+% %             D=eye(3)+8*(skew_s*skew_s)/(1+transpose(s)*s)^2-4*(1-transpose(s)*s)/(1+transpose(s)*s)^2*skew_s;
+% %         % D' is DCM from target to chaser:
+% %             D=D';
+% %             C_BI=quat2dcm(qc);
+% %             C_LI=[cos(theta),sin(theta),0;-sin(theta),cos(theta),0;0,0,1];
+% %             C_BL=C_BI*C_LI';
+% %         % S is the array containing all points in the complete model:
+% %             P_i=C_BL'*D*fv2.Points'+[xr;yr;zr];
+% %             fv_new2=triangulation(fv2.ConnectivityList,P_i');
+% %             trisurf(fv_new2)
+% %             hold on
 %         end
 % 
+
 % 
-% % 
 
 
 
@@ -92,9 +92,11 @@ for loop=1:Nmax-start_frame+1
 %% image processing part:
 
         [J2_L,J2_R,disparityMap]=img_preproc(renderer,loop+start_frame-1);
+        figure()
+        [y]=sim_measure(xn,fv,fv2,cam_params,MASK);
         [feats_HK, measures]=extract_features(J2_L,disparityMap,cam_params);
         yn.m=size(measures,1);
-        yn.z=reshape(measures',[],1);
+        yn.z=double(reshape(measures',[],1)); % cast to double to use in functions
         yn.feats=feats_HK;
 
     %% Filter propagator step:
@@ -110,17 +112,14 @@ for loop=1:Nmax-start_frame+1
         new = find((H == 0) & (compatibility.AL == 0));
         new=new(1:min(Opt.Nnew(min(loop,2)),length(new)));
         
-%         close all
-%         figure()
-%         meas_act=reshape(yn.z,3,[])';
-%         scatter(meas_act(:,1),meas_act(:,2));
-%         meas_est=reshape(Yn.h,3,[])';
-%         hold on
-%         scatter(meas_est(:,1),meas_est(:,2));
+        close all
+        figure()
+        meas_act=reshape(yn.z,3,[])';
+        scatter(meas_act(:,1),meas_act(:,2));
+        meas_est=reshape(Yn.h,3,[])';
+        hold on
+        scatter(meas_est(:,1),meas_est(:,2));
         
-%         norm(xn(1:3)-Xn1(1:3))
-%         norm(xn(4:6)-Xn1(4:6))
-%         norm(xn(7:end)-Xn1(7:end))
         
 %         plot(meas_act(:,3))
 %         hold on

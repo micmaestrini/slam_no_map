@@ -22,7 +22,7 @@ J2_L=wiener2(J_L);
     
 
 % figure()
-%     imshowpair(I_L,J2_L,'montage');
+    imshowpair(I_L,J2_L,'montage');
      
 I_RGB_R=imread(frameName_R);
 I_R=rgb2gray(I_RGB_R);

@@ -29,6 +29,9 @@ function [y,lmkinfo]=prop_measures(Xn,S0,Prr,Prm,Pmm,cam_params,Rn,lmkinfo)
         C_BI=eye(3)+8*(skew_sc*skew_sc)/(1+transpose(sc)*sc)^2-4*(1-transpose(sc)*sc)/(1+transpose(sc)*sc)^2*skew_sc;
         C_LI=[cos(f0),sin(f0),0;-sin(f0),cos(f0),0;0,0,1];
         C_BL=C_BI*C_LI';
+        qc=dcm2quat(C_BL);
+        sc=qc(2:end)/(1+qc(1));
+
 
 
 %     % DCM that rotates from LVLH to chaser body frame definition:

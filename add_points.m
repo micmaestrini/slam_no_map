@@ -43,10 +43,17 @@ function [Pi,Prm,Pmm,lmkinfo,feats_list]=add_points(X,yn,Prr,Prm,Pmm,R,cam_param
         s0=X(14:16);
 
         sc=X(22:24);
-%         skew_sc=[0,-sc(3),sc(2);sc(3),0,-sc(1);-sc(2),sc(1),0];
-%         C_BI=eye(3)+8*(skew_sc*skew_sc)/(1+transpose(sc)*sc)^2-4*(1-transpose(sc)*sc)/(1+transpose(sc)*sc)^2*skew_sc;
-%         C_LI=[cos(f0),sin(f0),0;-sin(f0),cos(f0),0;0,0,1];
-%         C_BL=C_BI*C_LI';
+        skew_sc=[0,-sc(3),sc(2);sc(3),0,-sc(1);-sc(2),sc(1),0];
+        C_BI=eye(3)+8*(skew_sc*skew_sc)/(1+transpose(sc)*sc)^2-4*(1-transpose(sc)*sc)/(1+transpose(sc)*sc)^2*skew_sc;
+        C_LI=[cos(f0),sin(f0),0;-sin(f0),cos(f0),0;0,0,1];
+        C_BL=C_BI*C_LI';
+        qc=dcm2quat(C_BL);
+        sc=qc(2:end)/(1+qc(1));
+
+
+
+
+
         
         P_i =@(m) G_fun(cam_params.alpha_u,cam_params.alpha_v,cam_params.b,m(3),s0(1),s0(2),s0(3),sc(1),sc(2),sc(3),m(1),cam_params.u0,m(2),cam_params.v0,x0,y0,z0);
         dg_pi = @(m) G_Pi(cam_params.alpha_u,cam_params.alpha_v,cam_params.b,m(3),s0(1),s0(2),s0(3),m(1),cam_params.u0,m(2),cam_params.v0);

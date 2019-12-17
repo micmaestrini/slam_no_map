@@ -1,4 +1,4 @@
-function [y]=sim_measure(X,fv,fv2,cam_params,qc,MASK)
+function [y]=sim_measure(X,fv,fv2,cam_params,MASK)
     % This function simulates a time step in the simulator.
     % Inputs:
     % X    :  state of simulator after dt;
@@ -40,12 +40,19 @@ function [y]=sim_measure(X,fv,fv2,cam_params,qc,MASK)
 %         skew_sc=[0,-sc(3),sc(2);sc(3),0,-sc(1);-sc(2),sc(1),0];
 %         Dc=eye(3)+8*(skew_sc*skew_sc)/(1+transpose(sc)*sc)^2-4*(1-transpose(sc)*sc)/(1+transpose(sc)*sc)^2*skew_sc;
 %         C_BL=simplify(Dc);
-        C_BI=quat2dcm(qc);
+%         C_BI=quat2dcm(qc);
+%         C_LI=[cos(theta),sin(theta),0;-sin(theta),cos(theta),0;0,0,1];
+%         C_BL=C_BI*C_LI';
+%         qc=dcm2quat(C_BL);
+%         sc=qc(2:end)/(1+qc(1));
+        sc=X(22:24);
+        skew_sc=[0,-sc(3),sc(2);sc(3),0,-sc(1);-sc(2),sc(1),0];
+        Dc=eye(3)+8*(skew_sc*skew_sc)/(1+transpose(sc)*sc)^2-4*(1-transpose(sc)*sc)/(1+transpose(sc)*sc)^2*skew_sc;
+        
+
+        C_BI=(Dc);
         C_LI=[cos(theta),sin(theta),0;-sin(theta),cos(theta),0;0,0,1];
         C_BL=C_BI*C_LI';
-        qc=dcm2quat(C_BL);
-        sc=qc(2:end)/(1+qc(1));
-        
 
     % definition of points of the complete and reduced model in the camera
     % frame (i.e. aligned with x axis of chaser):
@@ -129,6 +136,9 @@ function [y]=sim_measure(X,fv,fv2,cam_params,qc,MASK)
         zi=P_i(3,:);
     % stereo conversion measurement equation:
         h=[cam_params.u0+cam_params.alpha_u*xi./zi;cam_params.v0+cam_params.alpha_v*yi./zi;cam_params.alpha_u*cam_params.b./zi];
+        scatter(h(1,:),h(2,:));
+        xlim([-cam_params.hpix/2,cam_params.hpix/2]);
+        ylim([-cam_params.vpix/2,cam_params.vpix/2]);
 
 %         H_fun(cam_params.alpha_u,cam_params.alpha_v,cam_params.b,fv2.Points(1,1),fv2.Points(1,2),fv2.Points(1,3),s1,s2,s3,sc(1),sc(2),sc(3),cam_params.u0,cam_params.v0,x0,y0,z0)
         %         scatter(h(1,:),h(2,:))
