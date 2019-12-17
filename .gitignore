@@ -3,6 +3,7 @@
 
 # Non sourses
 *.fig
+*.tif
 *.png
 *.mat
 

@@ -3,6 +3,16 @@ initialize_params;
 Opt.Nup=10;
 Opt.Nnew=[10,3];
 
+% set initial frame for ekf process estimation:
+start_frame=1;
+tf=(start_frame-1)*dt;
+options=odeset('AbsTol',1e-10,'RelTol',1e-12);
+[T,Y]=ode113(@(t,y) process(t,y,params),[0,tf],x0,options);
+x0=Y(end,:)';
+X0=x0+er;
+
+
+
 load('meas.mat');
 
 %% preprocessing measures:
@@ -60,13 +70,29 @@ lmkinfo.counter_meas=[];
 lmkinfo.counter_prop=[];
 feats_list=single(zeros(0,64));
 
-for loop=1:Nmax
+for loop=1:Nmax-start_frame+1
     loop
     %% Simulator step:
     % obtain new state and new estimated measure after dt:
     % x0, xn, yn are 'reality':
 %         [xn,yn]=simulate_next_step(x0,dt,fv,fv2,cam_params,qc,MASK);
         xn=sim_states(x0,dt,params);
+
+%% image processing part:
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
         pix_coord=double(measures{loop}); % convert to double precision
         y=[pix_coord([1,2],:);pix_coord(3,:)-pix_coord(1,:)];
         yn.m=size(y,2);
