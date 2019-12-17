@@ -69,9 +69,77 @@ end
 %         end
 % 
 
+
+%%
+% cam=cam_params;
+%     s=xn(14:16);
+%     s1=s(1);
+%     s2=s(2);
+%     s3=s(3);
+%     r=xn(7);
+%     f=xn(9);
+%     
+%     
+%     
+%     sc=xn(22:end);
+%             sc1=sc(1);
+%             sc2=sc(2);
+%             sc3=sc(3);
+%             
+%             
+%             
+%             skew_sc=[0,-sc3,sc2;sc3,0,-sc1;-sc2,sc1,0];
+%         % define DCM that brings from I to C frame:
+%             C_CI=eye(3)+8*(skew_sc*skew_sc)/(1+transpose(sc)*sc)^2-4*(1-transpose(sc)*sc)/(1+transpose(sc)*sc)^2*skew_sc;
+%             C_LI=[cos(f),sin(f),0;-sin(f),cos(f),0;0,0,1];
+%             C_CL=C_CI*C_LI';
+%             
+%     
+%     
+%     skew_s=[0,-s3,s2;s3,0,-s1;-s2,s1,0];
+% % define DCM that brings from chaser to target frame D:
+%     C_TC=eye(3)+8*(skew_s*skew_s)/(1+transpose(s)*s)^2-4*(1-transpose(s)*s)/(1+transpose(s)*s)^2*skew_s;
 % 
+%     P_i=(C_TC'*fv.Points'+C_CL*xn(1:3)); % (Pi-T)+(T-C)
+% 
+%     % definition of the rotated triangulations:
+%     fv_new=triangulation(fv.ConnectivityList,P_i');
+% 
+%     xi=P_i(1,:);
+%     yi=P_i(2,:);
+%     zi=P_i(3,:);
+% 
+%     % simula l'acquisizione in camera (pinhole camera model)+ disparity(stereo)
+%     h=[cam.u0-cam.hpix*cam.foc/cam.Hf*xi./zi;cam.v0-cam.vpix*cam.foc/cam.Vf*yi./zi;cam.foc*cam.b./zi];
+%     % serve perchè in stereovision la disparità maggiore è data ai punti più
+%     % vicini. (solo per visualizzare i plot).
+%     transformedh=[h(1:2,:);1./h(3,:)];
+% 
+%     % definition of the rotated triangulations:
+%     fv_cam=triangulation(fv.ConnectivityList,transformedh');
+% 
+%     trisurf(fv_cam);
+% 
+%     figure(2)
+%     title('Simulated Image');
+%     trisurf(fv_cam);
+% 
+%     hold on
+%     plot3(0,0,0,'ro','LineWidth',2);
+%     axis equal
+%     campos([0,0,0]);
+%     % view([0,90]);
+%     xlim([-cam.hpix/2,cam.hpix/2]);
+%     ylim([-cam.vpix/2,cam.vpix/2]);
+%     ax = gca;
+%     % ax.YDir = 'reverse';
+%     % ax.XDir = 'reverse';
+%     xlabel('x');
+%     ylabel('y');
+%     zlabel('z');
 
 
+%%
 
 
 %% Start Loop:
@@ -92,34 +160,46 @@ for loop=1:Nmax-start_frame+1
 %% image processing part:
 
         [J2_L,J2_R,disparityMap]=img_preproc(renderer,loop+start_frame-1);
-        figure()
-        [y]=sim_measure(xn,fv,fv2,cam_params,MASK);
         [feats_HK, measures]=extract_features(J2_L,disparityMap,cam_params);
         yn.m=size(measures,1);
         yn.z=double(reshape(measures',[],1)); % cast to double to use in functions
         yn.feats=feats_HK;
+
+
 
     %% Filter propagator step:
     % X0, Xn, Yn are estimates and S0 is set of available landmarks, Sn is 
     % the set of points which are estimated to be visible in FOV:
         [Xn,Yn,Prrn,Prmn,Pmmn,lmkinfo]=propagate_next_step(X0,Prr0,Prm0,Pmm0,Q,dt,S0,cam_params,R,lmkinfo,params);        
         
+
+
+%         meas_act=reshape(yn.z,3,[])';
+%         scatter3(meas_act(:,1),meas_act(:,2),meas_act(:,3));
+%         meas_est=reshape(Yn.h,3,[])';
+%         hold on
+%         scatter3(meas_est(:,1),meas_est(:,2),meas_est(:,3));
+
+
         compatibility=compute_compatibility (Yn, yn);
         H= JCBB_test(Yn,yn,compatibility);
 %         sum(find(H))
 %         [~,i, j] = find(H)
+
         [Prrn1,Prmn1,Pmmn1,Xn1,Sn1,lmkinfo,feats_list]=update_step(Xn,Prrn,Prmn,Pmmn,yn,Yn,S0,H,Opt,lmkinfo,feats_list);
+   
+%%
+
         new = find((H == 0) & (compatibility.AL == 0));
         new=new(1:min(Opt.Nnew(min(loop,2)),length(new)));
         
-        close all
-        figure()
-        meas_act=reshape(yn.z,3,[])';
-        scatter(meas_act(:,1),meas_act(:,2));
-        meas_est=reshape(Yn.h,3,[])';
-        hold on
-        scatter(meas_est(:,1),meas_est(:,2));
-        
+%         close all
+%         figure()
+
+%         meas_est=reshape(Yn.h,3,[])';
+%         hold on
+%         scatter(meas_est(:,1),meas_est(:,2));
+%         
         
 %         plot(meas_act(:,3))
 %         hold on
@@ -129,6 +209,16 @@ for loop=1:Nmax-start_frame+1
         if size(S0,1)<max_landmarks
             [S_new,Prm_new,Pmm_new,lmkinfo,feats_list]=add_points(Xn1,yn,Prrn1,Prmn1,Pmmn1,R,cam_params,new,lmkinfo,feats_list);
         end
+
+
+%%
+
+
+
+
+
+
+
         
         
         [x0,X0,Prr0,Prm0,Pmm0,S0]=reset_conditions(xn,Xn1,Prrn1,Prm_new,Pmm_new,S_new,Sn1);

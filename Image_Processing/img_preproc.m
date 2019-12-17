@@ -22,7 +22,7 @@ J2_L=wiener2(J_L);
     
 
 % figure()
-    imshowpair(I_L,J2_L,'montage');
+%     imshowpair(I_L,J2_L,'montage');
      
 I_RGB_R=imread(frameName_R);
 I_R=rgb2gray(I_RGB_R);
@@ -35,16 +35,23 @@ J2_R=wiener2(J_R);
 %     close all
 disparityRange=[208, 240];
 % disparityMap = disparityBM(wiener2(J2_L),wiener2(J2_R),'DisparityRange',disparityRange,'UniquenessThreshold',100,'BlockSize',5);
-disparityMap = disparityBM((J2_L),(J2_R),'DisparityRange',disparityRange,'UniquenessThreshold',30,'BlockSize',35);
-
-
-
+disparityMap = disparityBM((J2_L),(J2_R),'DisparityRange',disparityRange,'UniquenessThreshold',20,'BlockSize',15);
 disparityMap=medfilt2(disparityMap);
+
 % figure()
 % imshow((disparityMap),disparityRange)
 % title('Disparity Map')
 % colormap jet
 % colorbar
+
+disparityMap(disparityMap<208)=nan;
+disparityMap(disparityMap>238.9)=nan;
+
+
+% figure()
+% imshow(J2_L);
+% figure()
+% imshow(J2_R);
 % hold on
 % plot(A);
 

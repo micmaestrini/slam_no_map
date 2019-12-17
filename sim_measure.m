@@ -57,6 +57,16 @@ function [y]=sim_measure(X,fv,fv2,cam_params,MASK)
     % definition of points of the complete and reduced model in the camera
     % frame (i.e. aligned with x axis of chaser):
         P_i=D*S'+C_BL*[x0;y0;z0];
+        xi=P_i(1,:);
+        yi=P_i(2,:);
+        zi=P_i(3,:);
+        h=[cam_params.u0+cam_params.alpha_u*xi./zi;cam_params.v0+cam_params.alpha_v*yi./zi;cam_params.alpha_u*cam_params.b./zi];
+        scatter(h(1,:),h(2,:));
+        xlim([-cam_params.hpix/2,cam_params.hpix/2]);
+        ylim([-cam_params.vpix/2,cam_params.vpix/2]);
+
+
+
         P_i2=D*fv2.Points'+C_BL*[x0;y0;z0];
 
     % definition of the rotated triangulations:
@@ -136,9 +146,9 @@ function [y]=sim_measure(X,fv,fv2,cam_params,MASK)
         zi=P_i(3,:);
     % stereo conversion measurement equation:
         h=[cam_params.u0+cam_params.alpha_u*xi./zi;cam_params.v0+cam_params.alpha_v*yi./zi;cam_params.alpha_u*cam_params.b./zi];
-        scatter(h(1,:),h(2,:));
-        xlim([-cam_params.hpix/2,cam_params.hpix/2]);
-        ylim([-cam_params.vpix/2,cam_params.vpix/2]);
+%         scatter(h(1,:),h(2,:));
+%         xlim([-cam_params.hpix/2,cam_params.hpix/2]);
+%         ylim([-cam_params.vpix/2,cam_params.vpix/2]);
 
 %         H_fun(cam_params.alpha_u,cam_params.alpha_v,cam_params.b,fv2.Points(1,1),fv2.Points(1,2),fv2.Points(1,3),s1,s2,s3,sc(1),sc(2),sc(3),cam_params.u0,cam_params.v0,x0,y0,z0)
         %         scatter(h(1,:),h(2,:))

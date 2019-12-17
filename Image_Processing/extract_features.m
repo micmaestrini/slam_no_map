@@ -5,12 +5,14 @@ blobs = detectHarrisFeatures(J,'MinQuality',0.05);
 [~,b]=sort(blobs.Metric,'desc');
 sorted_blobs=blobs(b);
 
+strongest_blobs=sorted_blobs(1:min(200,size(sorted_blobs,1)));
+
 % x=linspace(1,size(disparityMap,1),size(disparityMap,1))';
 % y=linspace(1,size(disparityMap,2),size(disparityMap,2))';
 
 % [X,Y]=meshgrid(x,y);
 
-[feats_HK, valid_points_HK]=extractFeatures(J,sorted_blobs,'Method','KAZE');
+[feats_HK, valid_points_HK]=extractFeatures(J,strongest_blobs,'Method','KAZE');
 
 xq=(valid_points_HK.Location(:,1));
 yq=(valid_points_HK.Location(:,2));
@@ -19,7 +21,7 @@ yq=(valid_points_HK.Location(:,2));
 vq = interp2(disparityMap,xq,yq);
 
 feats_HK=feats_HK(~isnan(vq),:);
-measures=[xq(~isnan(vq))-cam_params.hpix/2,-yq(~isnan(vq))+cam_params.vpix/2,vq(~isnan(vq))];
+measures=[xq(~isnan(vq))-cam_params.hpix/2,-yq(~isnan(vq))+cam_params.vpix/2,-vq(~isnan(vq))];
 
 % figure()
 % imshow((disparityMap),[208;240])
