@@ -1,16 +1,27 @@
 %% initialize variables
 initialize_params;
+
+renderer='eevee';
+
 Opt.Nup=10;
 Opt.Nnew=[10,3];
 
 % set initial frame for ekf process estimation:
-start_frame=1;
-tf=(start_frame-1)*dt;
-options=odeset('AbsTol',1e-10,'RelTol',1e-12);
-[T,Y]=ode113(@(t,y) process(t,y,params),[0,tf],x0,options);
-x0=Y(end,:)';
-X0=x0+er;
+start_frame=7;
+if start_frame~=1
+    tf=(start_frame-1)*dt;
+    options=odeset('AbsTol',1e-10,'RelTol',1e-12);
+    [T,Y]=ode113(@(t,y) process(t,y,params),[0,tf],x0,options);
+    x0=Y(end,:)';
+    X0=x0+er;
+end
 
+% 
+% pix_coord=double(measures{loop}); % convert to double precision
+% y=[pix_coord([1,2],:);pix_coord(3,:)-pix_coord(1,:)];
+% yn.m=size(y,2);
+% yn.z=reshape(y,[],1);
+% yn.feats=feats{loop};
 
 
 load('meas.mat');
@@ -79,29 +90,12 @@ for loop=1:Nmax-start_frame+1
         xn=sim_states(x0,dt,params);
 
 %% image processing part:
-        
 
-
-
-
-
-
-
-
-
-
-
-
-
-        pix_coord=double(measures{loop}); % convert to double precision
-        y=[pix_coord([1,2],:);pix_coord(3,:)-pix_coord(1,:)];
-        yn.m=size(y,2);
-        yn.z=reshape(y,[],1);
-        yn.feats=feats{loop};
-        yn.z
-        reshape(ans,3,[])
-        hold on
-        scatter3(ans(1,:),ans(2,:),ans(3,:))
+        [J2_L,J2_R,disparityMap]=img_preproc(renderer,loop+start_frame-1);
+        [feats_HK, measures]=extract_features(J2_L,disparityMap,cam_params);
+        yn.m=size(measures,1);
+        yn.z=reshape(measures',[],1);
+        yn.feats=feats_HK;
 
     %% Filter propagator step:
     % X0, Xn, Yn are estimates and S0 is set of available landmarks, Sn is 

@@ -18,12 +18,12 @@ s3=X(16);
 k1=X(17);
 k2=X(18);
 
-wcx=0;
-wcy=0;
-wcz=0;
-dwcx=0;
-dwcy=0;
-dwcz=0;
+wcx=X(19);
+wcy=X(20);
+wcz=X(21);
+dwcx=X(22);
+dwcy=X(23);
+dwcz=X(24);
 
 
 
