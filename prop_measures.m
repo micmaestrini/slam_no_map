@@ -1,4 +1,4 @@
-function [y,lmkinfo]=prop_measures(Xn,S0,Prr,Prm,Pmm,cam_params,qc,Rn,lmkinfo)
+function [y,lmkinfo]=prop_measures(Xn,S0,Prr,Prm,Pmm,cam_params,Rn,lmkinfo)
     % Function that estimates measures available at the state x^-_{k+1}.
     % Inputs: 
     % X0    : state of the filter after previous correction (i.e. x^+_k);
@@ -22,12 +22,21 @@ function [y,lmkinfo]=prop_measures(Xn,S0,Prr,Prm,Pmm,cam_params,qc,Rn,lmkinfo)
         s2=s(2);
         s3=s(3);
 
+
     % DCM that rotates from LVLH to chaser body frame definition:
-        C_BI=quat2dcm(qc);
+        sc=Xn(22:24);
+        skew_sc=[0,-sc(3),sc(2);sc(3),0,-sc(1);-sc(2),sc(1),0];
+        C_BI=eye(3)+8*(skew_sc*skew_sc)/(1+transpose(sc)*sc)^2-4*(1-transpose(sc)*sc)/(1+transpose(sc)*sc)^2*skew_sc;
         C_LI=[cos(f0),sin(f0),0;-sin(f0),cos(f0),0;0,0,1];
         C_BL=C_BI*C_LI';
-        qc=dcm2quat(C_BL);
-        sc=qc(2:end)/(1+qc(1));
+
+
+%     % DCM that rotates from LVLH to chaser body frame definition:
+%         C_BI=quat2dcm(qc);
+%         C_LI=[cos(f0),sin(f0),0;-sin(f0),cos(f0),0;0,0,1];
+%         C_BL=C_BI*C_LI';
+%         qc=dcm2quat(C_BL);
+%         sc=qc(2:end)/(1+qc(1));
 
     % DCM that rotates from target to chaser frame (D'):
         skew_s=[0,-s3,s2;s3,0,-s1;-s2,s1,0];

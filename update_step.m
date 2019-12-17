@@ -33,8 +33,6 @@ function [Prrn,Prmn,Pmmn,Xn,Sn,lmkinfo,feats_list]=update_step(Xn,Prr,Prm,Pmm,yn
     feats_list(j,:)=yn.feats(i,:);    
     
     
-    
-    
     lmkinfo.counter_meas(j)=lmkinfo.counter_meas(j)+1;
     
     [~,pos]= sort(Yn.sigma(j),'desc');
@@ -56,7 +54,8 @@ function [Prrn,Prmn,Pmmn,Xn,Sn,lmkinfo,feats_list]=update_step(Xn,Prr,Prm,Pmm,yn
     
     % remove r, dr, theta,dtheta from state and save them in dummy variable:
         state=Xn([1:6,11:18]);
-        params=Xn(7:10);
+        params1=Xn(7:10);
+        params2=Xn(19:24);
         
     % assemble full covariance matrix:
         P0=[Prr,Prm;Prm',Pmm];
@@ -74,7 +73,7 @@ function [Prrn,Prmn,Pmmn,Xn,Sn,lmkinfo,feats_list]=update_step(Xn,Prr,Prm,Pmm,yn
         
     %% output reshaping:
     % updated state reaugmented with parameters:
-        Xn=[state_n(1:6);params;state_n(7:14)];
+        Xn=[state_n(1:6);params1;state_n(7:14);params2];
     % reshaping landmarks after update:
         Sn=reshape(state_n(15:end),3,[])';
 

@@ -1,6 +1,6 @@
-function [dX]=process(t,X)
+function [dX]=process(t,X,params)
 
-mu=3.986*1e14;
+mu=params.mu;
 
 x=X(1);
 y=X(2);
@@ -41,8 +41,13 @@ ddr=r.*df.^2-mu./r.^2;
 
 % derivatives of relative attitude
 
-wc=zeros(3,1);
-dwc=zeros(3,1);
+wc=X(19:21);
+dwc=-inv(params.Ic_mat)*(cross(wc,params.Ic_mat*wc));
+sc=X(22:24);
+skew_sc=[0,-sc(3),sc(2);sc(3),0,-sc(1);-sc(2),sc(1),0];
+% Dc=eye(3)+8*(skew_sc*skew_sc)/(1+transpose(sc)*sc)^2-4*(1-transpose(sc)*sc)/(1+transpose(sc)*sc)^2*skew_sc;
+Bc=1/4*((1-transpose(sc)*sc)*eye(3)+2*skew_sc+2*sc*transpose(sc));
+dsc=Bc*wc;
 
 ds=B*w;
 dw=invJ*(-cross(w,J*w)+J*cross(w,D*wc)-J*D*dwc-cross(D*wc,J*D*wc)-cross(w,J*D*wc)-cross(D*wc,J*w));
@@ -52,5 +57,5 @@ dk1=0;
 dk2=0;
 
 
-dX=[dx;dy;dz;ddx;ddy;ddz;dr;ddr;df;ddf;dw;ds;dk1;dk2];
+dX=[dx;dy;dz;ddx;ddy;ddz;dr;ddr;df;ddf;dw;ds;dk1;dk2;dwc;dsc];
 end

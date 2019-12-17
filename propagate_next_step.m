@@ -1,4 +1,4 @@
-function [Xn,Yn,Prrn,Prmn,Pmmn,lmkinfo]=propagate_next_step(X0,Prr0,Prm0,Pmm0,Q0,dt,S0,cam_params,qc,R,lmkinfo)
+function [Xn,Yn,Prrn,Prmn,Pmmn,lmkinfo]=propagate_next_step(X0,Prr0,Prm0,Pmm0,Q0,dt,S0,cam_params,R,lmkinfo,params)
     % Function that propagates from the state x^+_k to the state x^-_{k+1}.
     % Inputs: 
     % X0    : state of the filter after previous correction (i.e. x^+_k);
@@ -23,7 +23,7 @@ function [Xn,Yn,Prrn,Prmn,Pmmn,lmkinfo]=propagate_next_step(X0,Prr0,Prm0,Pmm0,Q0
 
     %% propagate next state:
     % step to propagate the states inside the filter:
-        [Xn]=prop_states(X0,dt);
+        [Xn]=prop_states(X0,dt,params);
 
     %% propagate covariance:
     % covariance propagation step:
@@ -31,6 +31,6 @@ function [Xn,Yn,Prrn,Prmn,Pmmn,lmkinfo]=propagate_next_step(X0,Prr0,Prm0,Pmm0,Q0
 
     %% estimate new measures at estimated new state:
     % estimate of measures and visibility (inside FOV):
-        [Yn,lmkinfo]=prop_measures(Xn,S0,Prrn,Prmn,Pmmn,cam_params,qc,R,lmkinfo);
+        [Yn,lmkinfo]=prop_measures(Xn,S0,Prrn,Prmn,Pmmn,cam_params,R,lmkinfo);
 
 end

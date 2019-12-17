@@ -1,6 +1,6 @@
 function [Snew,Prm_new,Pmm_new,lmkinfo,feats_list]=remove_points(Snew,Prm_new,Pmm_new,lmkinfo,feats_list)
 
-tbr=find(lmkinfo.counter_meas./lmkinfo.counter_prop<0.5 & lmkinfo.counter_prop>5);
+tbr=find(lmkinfo.counter_meas./lmkinfo.counter_prop<0.5 & lmkinfo.counter_prop>10);
 
 feats_list(tbr,:)=[];
 % if ~isempty(tbr)
@@ -16,10 +16,5 @@ Snew(tbr,:)=[];
 Prm_new(:,rows)=[];
 Pmm_new(rows,:)=[];
 Pmm_new(:,rows)=[];
-
-
-
-
-
 
 end

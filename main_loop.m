@@ -66,7 +66,7 @@ for loop=1:Nmax
     % obtain new state and new estimated measure after dt:
     % x0, xn, yn are 'reality':
 %         [xn,yn]=simulate_next_step(x0,dt,fv,fv2,cam_params,qc,MASK);
-        xn=sim_states(x0,dt);
+        xn=sim_states(x0,dt,params);
         pix_coord=double(measures{loop}); % convert to double precision
         y=[pix_coord([1,2],:);pix_coord(3,:)-pix_coord(1,:)];
         yn.m=size(y,2);
@@ -80,7 +80,7 @@ for loop=1:Nmax
     %% Filter propagator step:
     % X0, Xn, Yn are estimates and S0 is set of available landmarks, Sn is 
     % the set of points which are estimated to be visible in FOV:
-        [Xn,Yn,Prrn,Prmn,Pmmn,lmkinfo]=propagate_next_step(X0,Prr0,Prm0,Pmm0,Q,dt,S0,cam_params,qc,R,lmkinfo);        
+        [Xn,Yn,Prrn,Prmn,Pmmn,lmkinfo]=propagate_next_step(X0,Prr0,Prm0,Pmm0,Q,dt,S0,cam_params,R,lmkinfo,params);        
         
         compatibility=compute_compatibility (Yn, yn);
         H= JCBB_test(Yn,yn,compatibility);
@@ -106,7 +106,12 @@ for loop=1:Nmax
 %         hold on
 %         plot(meas_est(:,3))
         
-        [S_new,Prm_new,Pmm_new,lmkinfo,feats_list]=add_points(Xn1,yn,Prrn1,Prmn1,Pmmn1,R,cam_params,qc,new,lmkinfo,feats_list);
+        
+        if size(S0,1)<max_landmarks
+            [S_new,Prm_new,Pmm_new,lmkinfo,feats_list]=add_points(Xn1,yn,Prrn1,Prmn1,Pmmn1,R,cam_params,new,lmkinfo,feats_list);
+        end
+        
+        
         [x0,X0,Prr0,Prm0,Pmm0,S0]=reset_conditions(xn,Xn1,Prrn1,Prm_new,Pmm_new,S_new,Sn1);
         [S0,Prm0,Pmm0,lmkinfo,feats_list]=remove_points(S0,Prm0,Pmm0,lmkinfo,feats_list);
         
