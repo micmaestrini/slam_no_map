@@ -208,7 +208,12 @@ for loop=1:Nmax-start_frame+1
         
         if size(S0,1)<max_landmarks
             [S_new,Prm_new,Pmm_new,lmkinfo,feats_list]=add_points(Xn1,yn,Prrn1,Prmn1,Pmmn1,R,cam_params,new,lmkinfo,feats_list);
+        else
+            S_new=[];
+            Prm_new=Prmn1;
+            Pmm_new=Pmmn1;
         end
+        
 
 
 %%
@@ -233,10 +238,10 @@ for loop=1:Nmax-start_frame+1
         simulator_history,state_history,landmarks_map,covariance_mat,loop,visibility_check);
 
         
+        %% live plot
         
         
-        
-        
+        live_processing;
         
         
         
@@ -409,6 +414,6 @@ end
 %% Postprocessing
 
 % Nmax=loop;
-validation_script;
-plotting_script;
+% validation_script;
+% plotting_script;
 

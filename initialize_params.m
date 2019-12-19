@@ -222,3 +222,35 @@ Prm0=sparse(zeros(14,3*size(S0,1)));
 Pmm0=sparse(zeros(3*size(S0,1)));
 
 map_visibility=linspace(1,size(S0,1),size(S0,1))';
+
+%%
+
+figure; hAxes(1) = gca;
+h1x = animatedline(hAxes(1));
+h1y = animatedline(hAxes(1));
+h1z = animatedline(hAxes(1));
+h1r = animatedline(hAxes(1));
+h1mdr = animatedline(hAxes(1));
+
+figure; hAxes(2) = gca;
+h2x = animatedline(hAxes(2));
+h2y = animatedline(hAxes(2));
+h2z = animatedline(hAxes(2));
+h2r = animatedline(hAxes(2));
+h2mdr = animatedline(hAxes(2));
+
+figure; hAxes(3) = gca;
+h3x = animatedline(hAxes(3));
+h3y = animatedline(hAxes(3));
+h3z = animatedline(hAxes(3));
+h3r = animatedline(hAxes(3));
+h3mdr = animatedline(hAxes(3));
+
+figure; hAxes(4) = gca;
+h41 = animatedline(hAxes(4));
+h42 = animatedline(hAxes(4));
+h4md1 = animatedline(hAxes(4));
+h4md2 = animatedline(hAxes(4));
+
+figure; hAxes(5) = gca;
+h5 = animatedline(hAxes(5));
