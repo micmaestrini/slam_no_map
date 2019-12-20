@@ -172,7 +172,8 @@ sk=K*sqrt(0.1);
 
 % Camera noise, normal distribution
 sp=1/sqrt(12);
-sp=0.17;
+% sp=0.17;
+% sp=1;
 
 %% Filter Parameters:
 
@@ -180,7 +181,7 @@ sp=0.17;
 R=sparse(sp^2*eye(3));
 
 % Process noise covariance:
-Q=sparse(1e-7*eye(14));
+Q=sparse(1e-8*eye(14));
 
 % Propagation timestep between measures:
 dt=0.5;
