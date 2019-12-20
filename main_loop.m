@@ -147,7 +147,7 @@ for loop=1:Nmax-start_frame+1
 %% image processing part:
 
 
-        [yn]=process_images(renderer,loop+start_frame-1,proc_method);
+        [yn]=process_images(renderer,loop+start_frame-1,proc_method,cam_params);
 
 
 

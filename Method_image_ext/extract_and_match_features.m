@@ -2,13 +2,13 @@ function  [features, measures]=extract_and_match_features(I1gray,I1gray_R,cam_pa
 
 
 % features detection:
-blobs1H = detectHarrisFeatures(I1gray,'MinQuality',0.1);
+blobs1H = detectHarrisFeatures(I1gray,'MinQuality',0.01,'FilterSize',5);
 
 [a,b]=sort(blobs1H.Metric,'desc');
 sorted_blobs1=blobs1H(b);
 sorted_blobs1=selectStrongest(blobs1H,min(100,size(blobs1H,1)));
 
-blobs2H = detectHarrisFeatures(I1gray_R,'MinQuality',0.1);
+blobs2H = detectHarrisFeatures(I1gray_R,'MinQuality',0.01,'FilterSize',15);
 [a,b]=sort(blobs2H.Metric,'desc');
 sorted_blobs2=blobs2H(b);
 sorted_blobs2=selectStrongest(blobs2H,min(100,size(blobs2H,1)));
@@ -38,6 +38,9 @@ vq=xqr-xq;
 
 measures=[xq-cam_params.hpix/2,-yq+cam_params.vpix/2,vq];
 features=filt_matchf1;
+
+% figure(2)
+% showMatchedFeatures(I1gray,I1gray_R,filt_match1,filt_match2);
 
 
 end

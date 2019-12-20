@@ -316,7 +316,7 @@ ylabel(hAxes(5),'error [rad]');
 
 
 renderer='eevee';
-proc_method='depth';
+proc_method='default';
 
 Opt.Nup=10;
 Opt.Nnew=[10,3];
