@@ -35,7 +35,7 @@ J2_R=wiener2(J_R);
 %     close all
 disparityRange=[208, 240];
 % disparityMap = disparityBM(wiener2(J2_L),wiener2(J2_R),'DisparityRange',disparityRange,'UniquenessThreshold',100,'BlockSize',5);
-disparityMap = disparityBM((J2_L),(J2_R),'DisparityRange',disparityRange,'UniquenessThreshold',20,'BlockSize',15);
+disparityMap = disparitySGM((J2_L),(J2_R),'DisparityRange',disparityRange,'UniquenessThreshold',50);
 disparityMap=medfilt2(disparityMap);
 
 % figure()

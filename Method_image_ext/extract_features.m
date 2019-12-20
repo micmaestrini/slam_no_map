@@ -1,7 +1,9 @@
 function [feats_HK, measures]=extract_features(J,disparityMap,cam_params)
 
 
-blobs = detectHarrisFeatures(J,'MinQuality',0.05);
+% blobs = detectHarrisFeatures(J,'MinQuality',0.05);
+blobs = detectSURFFeatures(J);
+
 [~,b]=sort(blobs.Metric,'desc');
 sorted_blobs=blobs(b);
 
@@ -12,7 +14,7 @@ strongest_blobs=sorted_blobs(1:min(200,size(sorted_blobs,1)));
 
 % [X,Y]=meshgrid(x,y);
 
-[feats_HK, valid_points_HK]=extractFeatures(J,strongest_blobs,'Method','KAZE');
+[feats_HK, valid_points_HK]=extractFeatures(J,strongest_blobs,'Method','SURF');
 
 xq=(valid_points_HK.Location(:,1));
 yq=(valid_points_HK.Location(:,2));
