@@ -36,7 +36,7 @@ function [Prrn,Prmn,Pmmn,Xn,Sn,lmkinfo,feats_list]=update_step(Xn,Prr,Prm,Pmm,yn
     lmkinfo.counter_meas(j)=lmkinfo.counter_meas(j)+1;
     
     [~,pos]= sort(Yn.sigma(j),'desc');
-    pos=randperm(length(j));
+%     pos=randperm(length(j));
 %     i(pos)
 %     j(pos)
 

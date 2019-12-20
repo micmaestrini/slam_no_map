@@ -14,7 +14,7 @@ strongest_blobs=sorted_blobs(1:min(200,size(sorted_blobs,1)));
 
 % [X,Y]=meshgrid(x,y);
 
-[feats_HK, valid_points_HK]=extractFeatures(J,strongest_blobs,'Method','SURF');
+[feats_HK, valid_points_HK]=extractFeatures(J,strongest_blobs,'Method','KAZE');
 
 xq=(valid_points_HK.Location(:,1));
 yq=(valid_points_HK.Location(:,2));
