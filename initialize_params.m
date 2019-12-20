@@ -181,7 +181,7 @@ sp=1/sqrt(12);
 R=sparse(sp^2*eye(3));
 
 % Process noise covariance:
-Q=sparse(1e-8*eye(14));
+Q=sparse(1e-7*eye(14));
 
 % Propagation timestep between measures:
 dt=0.5;
@@ -319,8 +319,8 @@ ylabel(hAxes(5),'error [rad]');
 renderer='eevee';
 proc_method='default';
 
-Opt.Nup=10;
-Opt.Nnew=[10,3];
+Opt.Nup=5;
+Opt.Nnew=[20,1];
 
 % set initial frame for ekf process estimation:
 start_frame=1;
