@@ -1,20 +1,7 @@
 %% initialize variables
 initialize_params;
 
-renderer='eevee';
 
-Opt.Nup=10;
-Opt.Nnew=[10,3];
-
-% set initial frame for ekf process estimation:
-start_frame=1;
-if start_frame~=1
-    tf=(start_frame-1)*dt;
-    options=odeset('AbsTol',1e-10,'RelTol',1e-12);
-    [T,Y]=ode113(@(t,y) process(t,y,params),[0,tf],x0,options);
-    x0=Y(end,:)';
-    X0=x0+er;
-end
 
 % 
 % pix_coord=double(measures{loop}); % convert to double precision
@@ -159,11 +146,8 @@ for loop=1:Nmax-start_frame+1
 
 %% image processing part:
 
-        [J2_L,J2_R,disparityMap]=img_preproc(renderer,loop+start_frame-1);
-        [feats_HK, measures]=extract_features(J2_L,disparityMap,cam_params);
-        yn.m=size(measures,1);
-        yn.z=double(reshape(measures',[],1)); % cast to double to use in functions
-        yn.feats=feats_HK;
+
+        [yn]=process_images(renderer,loop+start_frame-1,proc_method);
 
 
 
