@@ -223,34 +223,90 @@ Pmm0=sparse(zeros(3*size(S0,1)));
 
 map_visibility=linspace(1,size(S0,1),size(S0,1))';
 
-%%
+%% Plots initialization
 
-figure; hAxes(1) = gca;
-h1x = animatedline(hAxes(1));
-h1y = animatedline(hAxes(1));
-h1z = animatedline(hAxes(1));
-h1r = animatedline(hAxes(1));
-h1mdr = animatedline(hAxes(1));
+figure;
+sgtitle('Error evolution')
+hAxes(1)=subplot(2,3,1);
+hAxes(2)=subplot(2,3,2);
+hAxes(4)=subplot(2,3,[3,6]);
+hAxes(3)=subplot(2,3,4);
+hAxes(5)=subplot(2,3,5);
 
-figure; hAxes(2) = gca;
-h2x = animatedline(hAxes(2));
-h2y = animatedline(hAxes(2));
-h2z = animatedline(hAxes(2));
-h2r = animatedline(hAxes(2));
-h2mdr = animatedline(hAxes(2));
+h1x = animatedline(hAxes(1),'color',[0 0.4470 0.7410]);
+h1y = animatedline(hAxes(1),'color',[0.8500 0.3250 0.0980]);
+h1z = animatedline(hAxes(1),'color',[0.9290 0.6940 0.1250]);
+h1r = animatedline(hAxes(1),'color',[0.4940 0.1840 0.5560]);
+h1mdr = animatedline(hAxes(1),'color',[0.4660 0.6740 0.1880]);
 
-figure; hAxes(3) = gca;
-h3x = animatedline(hAxes(3));
-h3y = animatedline(hAxes(3));
-h3z = animatedline(hAxes(3));
-h3r = animatedline(hAxes(3));
-h3mdr = animatedline(hAxes(3));
 
-figure; hAxes(4) = gca;
-h41 = animatedline(hAxes(4));
-h42 = animatedline(hAxes(4));
-h4md1 = animatedline(hAxes(4));
-h4md2 = animatedline(hAxes(4));
+%legend:
+h1x.DisplayName='dx';
+h1y.DisplayName='dy';
+h1z.DisplayName='dz';
+h1r.DisplayName='dr';
+h1mdr.DisplayName='3\sigma_r';
+legend(hAxes(1));
+grid(hAxes(1),'minor');
+xlabel(hAxes(1),'sample n');
+ylabel(hAxes(1),'error [m]');
 
-figure; hAxes(5) = gca;
-h5 = animatedline(hAxes(5));
+
+h2x = animatedline(hAxes(2),'color',[0 0.4470 0.7410]);
+h2y = animatedline(hAxes(2),'color',[0.8500 0.3250 0.0980]);
+h2z = animatedline(hAxes(2),'color',[0.9290 0.6940 0.1250]);
+h2r = animatedline(hAxes(2),'color',[0.4940 0.1840 0.5560]);
+h2mdr = animatedline(hAxes(2),'color',[0.4660 0.6740 0.1880]);
+
+%legend:
+h2x.DisplayName='dvx';
+h2y.DisplayName='dvy';
+h2z.DisplayName='dvz';
+h2r.DisplayName='dvr';
+h2mdr.DisplayName='3\sigma_{vr}';
+legend(hAxes(2));
+grid(hAxes(2),'minor');
+xlabel(hAxes(2),'sample n');
+ylabel(hAxes(2),'error [m/s]');
+
+
+h3x = animatedline(hAxes(3),'color',[0 0.4470 0.7410]);
+h3y = animatedline(hAxes(3),'color',[0.8500 0.3250 0.0980]);
+h3z = animatedline(hAxes(3),'color',[0.9290 0.6940 0.1250]);
+h3r = animatedline(hAxes(3),'color',[0.4940 0.1840 0.5560]);
+h3mdr = animatedline(hAxes(3),'color',[0.4660 0.6740 0.1880]);
+
+%legend:
+h3x.DisplayName='dwx';
+h3y.DisplayName='dwy';
+h3z.DisplayName='dwz';
+h3r.DisplayName='dwr';
+h3mdr.DisplayName='3\sigma_{wr}';
+legend(hAxes(3));
+grid(hAxes(3),'minor');
+xlabel(hAxes(3),'sample n');
+ylabel(hAxes(3),'error [rad/s]');
+
+h41 = animatedline(hAxes(4),'color',[0 0.4470 0.7410]);
+h42 = animatedline(hAxes(4),'color',[0.8500 0.3250 0.0980]);
+h4md1 = animatedline(hAxes(4),'color',[0.9290 0.6940 0.1250]);
+h4md2 = animatedline(hAxes(4),'color',[0.4940 0.1840 0.5560]);
+
+%legend:
+h41.DisplayName='dk1';
+h42.DisplayName='dk2';
+h4md1.DisplayName='3\sigma_{k1}';
+h4md2.DisplayName='3\sigma_{k2}';
+legend(hAxes(4));
+grid(hAxes(4),'minor');
+xlabel(hAxes(4),'sample n');
+ylabel(hAxes(4),'error [-]');
+
+h5 = animatedline(hAxes(5),'color',[0 0.4470 0.7410]);
+
+%legend:
+h5.DisplayName='de';
+legend(hAxes(5));
+grid(hAxes(5),'minor');
+xlabel(hAxes(5),'sample n');
+ylabel(hAxes(5),'error [rad]');
