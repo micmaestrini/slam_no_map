@@ -17,17 +17,18 @@ frameName_R=char(strcat(filename_R,num2str(img_index),fft));
 
 I_RGB_L=imread(frameName_L);
 I_L=rgb2gray(I_RGB_L);
-J_L=adapthisteq(I_L,'NumTiles',[64 64],'ClipLimit',0.1,'Distribution','rayleigh');
-J2_L=wiener2(J_L);
-    
+% J_L=adapthisteq(I_L,'NumTiles',[64 64],'ClipLimit',0.1,'Distribution','rayleigh');
+% J2_L=wiener2(J_L);
+J2_L=I_L;
 
 % figure()
 %     imshowpair(I_L,J2_L,'montage');
      
 I_RGB_R=imread(frameName_R);
 I_R=rgb2gray(I_RGB_R);
-J_R=adapthisteq(I_R,'NumTiles',[64 64],'ClipLimit',0.1,'Distribution','rayleigh');
-J2_R=wiener2(J_R);
+% J_R=adapthisteq(I_R,'NumTiles',[64 64],'ClipLimit',0.1,'Distribution','rayleigh');
+% J2_R=wiener2(J_R);
+J2_R=I_R;
 
 % figure()
 %     imshowpair(I_R,J2_R,'montage');
