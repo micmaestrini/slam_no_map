@@ -1,4 +1,4 @@
-function [y,lmkinfo]=prop_measures(Xn,S0,Prr,Prm,Pmm,cam_params,Rn,lmkinfo)
+function [y]=prop_measures(Xn,S_new,Prr0,Prm0,Pmm0,cam_params,Rn)
     % Function that estimates measures available at the state x^-_{k+1}.
     % Inputs: 
     % X0    : state of the filter after previous correction (i.e. x^+_k);
@@ -47,7 +47,7 @@ function [y,lmkinfo]=prop_measures(Xn,S0,Prr,Prm,Pmm,cam_params,Rn,lmkinfo)
         D=D';
 
     % rotation of current landmarks in the chaser reference frame:
-        P_i=D*S0'+C_BL*[x0;y0;z0];
+        P_i=D*S_new'+C_BL*[x0;y0;z0];
         xi=P_i(1,:);
         yi=P_i(2,:);
         zi=P_i(3,:);
@@ -60,7 +60,6 @@ function [y,lmkinfo]=prop_measures(Xn,S0,Prr,Prm,Pmm,cam_params,Rn,lmkinfo)
     % cameras:
         vis=find(abs(h(1,:))<cam_params.hpix/2 & abs(h(2,:))<cam_params.vpix/2);
         vis=linspace(1,size(h,2),size(h,2));
-        lmkinfo.counter_prop=lmkinfo.counter_prop+1;
         
         y.h=reshape(h,[],1);
         y.vis=vis;
@@ -85,8 +84,8 @@ function [y,lmkinfo]=prop_measures(Xn,S0,Prr,Prm,Pmm,cam_params,Rn,lmkinfo)
 
     % loop over all visible points:
         for i=1:n
-                h_pi=H_Pi(cam_params.alpha_u,cam_params.alpha_v,cam_params.b,S0(vis(i),1),S0(vis(i),2),S0(vis(i),3),s1,s2,s3,sc(1),sc(2),sc(3),x0,y0,z0);
-                h_xi=H_x(cam_params.alpha_u,cam_params.alpha_v,cam_params.b,S0(vis(i),1),S0(vis(i),2),S0(vis(i),3),s1,s2,s3,sc(1),sc(2),sc(3),x0,y0,z0);
+                h_pi=H_Pi(cam_params.alpha_u,cam_params.alpha_v,cam_params.b,S_new(vis(i),1),S_new(vis(i),2),S_new(vis(i),3),s1,s2,s3,sc(1),sc(2),sc(3),x0,y0,z0);
+                h_xi=H_x(cam_params.alpha_u,cam_params.alpha_v,cam_params.b,S_new(vis(i),1),S_new(vis(i),2),S_new(vis(i),3),s1,s2,s3,sc(1),sc(2),sc(3),x0,y0,z0);
                 h_i=[h_xi,h_pi];
                 
                 columns_extraction_i=reshape(3*vis(i)-2+(0:2)',[],1);
@@ -114,7 +113,7 @@ function [y,lmkinfo]=prop_measures(Xn,S0,Prr,Prm,Pmm,cam_params,Rn,lmkinfo)
         
     % assembly of full scale Pn matrix excluding points outside FOV:
         columns_extraction=reshape(3*vis-2+(0:2)',[],1);
-        Pn=[Prr,Prm(:,columns_extraction);Prm(:,columns_extraction)',Pmm(columns_extraction,columns_extraction)];
+        Pn=[Prr0,Prm0(:,columns_extraction);Prm0(:,columns_extraction)',Pmm0(columns_extraction,columns_extraction)];
 
     % assembly of full scale measurement noise matrix:
         RnCell = repmat({Rn}, 1, n);

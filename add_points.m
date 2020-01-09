@@ -1,4 +1,4 @@
-function [Pi,Prm,Pmm,lmkinfo,feats_list]=add_points(X,yn,Prr,Prm,Pmm,R,cam_params,new,lmkinfo,feats_list)
+function [S_new,Prm_new,Pmm_new]=add_points(X0,y0,Prr0,Prm0,Pmm0,R,cam_params,indexPairs)
     % Function that adds unmatched landmarks measures to the state map.
     % Inputs: 
     % X      : state of the filter after correction (i.e. x^+_k+1);
@@ -20,29 +20,21 @@ function [Pi,Prm,Pmm,lmkinfo,feats_list]=add_points(X,yn,Prr,Prm,Pmm,R,cam_param
 
     % initialization of unmatched measures by subtraction from matched
     % measurement:
-        new_feats=yn.feats(new,:);
-        feats_list=[feats_list;new_feats];
-        
+        new=double(indexPairs(:,1)');
         indexes=reshape((new-1)*3+[1:3]',[],1);
-        unmatched_measures=yn.z(indexes);
+        unmatched_measures=y0.z(indexes);
     % n is the size of unmatched measures:
         n=length(new);
-        lmkinfo.counter_prop=[lmkinfo.counter_prop;zeros(n,1)];
-        lmkinfo.counter_meas=[lmkinfo.counter_meas;ones(n,1)];
-       
-        
-
-
-%         unmatched_measures(:,match(:,2))=[];
+        %         unmatched_measures(:,match(:,2))=[];
 
     % inverse measure function:
-        f0=X(9);
-        x0=X(1);
-        y0=X(2);
-        z0=X(3);
-        s0=X(14:16);
+        f0=X0(9);
+        x0=X0(1);
+        y0=X0(2);
+        z0=X0(3);
+        s0=X0(14:16);
 
-        sc=X(22:24);
+        sc=X0(22:24);
         skew_sc=[0,-sc(3),sc(2);sc(3),0,-sc(1);-sc(2),sc(1),0];
         C_BI=eye(3)+8*(skew_sc*skew_sc)/(1+transpose(sc)*sc)^2-4*(1-transpose(sc)*sc)/(1+transpose(sc)*sc)^2*skew_sc;
         C_LI=[cos(f0),sin(f0),0;-sin(f0),cos(f0),0;0,0,1];
@@ -113,12 +105,13 @@ function [Pi,Prm,Pmm,lmkinfo,feats_list]=add_points(X,yn,Prr,Prm,Pmm,R,cam_param
     % creation of new blocks for covariance matrix. Pll is new landmarks only.
     % Plr is new landmarks with state and Plm is new landmark with all other
     % landmarks:
-        Pll=GR*Prr*GR'+GP*BigR*GP';
-        Plr=GR*Prr;
-        Plm=GR*Prm;
+        Pll=GR*Prr0*GR'+GP*BigR*GP';
+        Plr=GR*Prr0;
+        Plm=GR*Prm0;
 
     % assembly of useful terms only:
-        Prm=[Prm,Plr'];
-        Pmm=[Pmm,Plm';Plm,Pll];
+        Prm_new=[Prm0,Plr'];
+        Pmm_new=[Pmm0,Plm';Plm,Pll];
+        S_new=Pi;
 
 end

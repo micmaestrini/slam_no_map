@@ -16,11 +16,31 @@ loop=1;
 
 indexPairs = matchFeatures(y0.feats,yn.feats);
 %matched across time instants:
+%%
+if size(S0,1)<max_landmarks
+    [S_new,Prm_new,Pmm_new]=add_points(X0,y0,Prr0,Prm0,Pmm0,R,cam_params,indexPairs);
+else
+    S_new=[];
+    Prm_new=Prmn1;
+    Pmm_new=Pmmn1;
+end
 
-meas0=reshape(y0.z,3,[]);
-measn=reshape(yn.z,3,[]);
+[Xn]=prop_states(X0,dt,params);
 
-delta=meas0(:,indexPairs(:,1))-measn(:,indexPairs(:,2))
+    % propagate covariance:
+    % covariance propagation step:        
+        Phi0=STM(X0,dt);
+    % state only covariance propagation:
+        Prrn=Phi0*Prr0*Phi0'+Q;
+    % mixed state landmarks covariance propagation:
+        Prmn=Phi0*Prm0;
+    % the covariance propagation is independent of the collected points and
+    % does not influence their pure covariance Pmm, just the mixed state terms.
+        Pmmn=Pmm0;
+
+    % estimate new measures at estimated new state:
+    % estimate of measures and visibility (inside FOV):
+        [Yn]=prop_measures(Xn,S0,Prrn,Prmn,Pmmn,cam_params,R);
 
 
 %%
