@@ -112,6 +112,6 @@ function [S_new,Prm_new,Pmm_new]=add_points(X0,y0,Prr0,Prm0,Pmm0,R,cam_params,in
     % assembly of useful terms only:
         Prm_new=[Prm0,Plr'];
         Pmm_new=[Pmm0,Plm';Plm,Pll];
-        S_new=Pi;
+        S_new=Pi';
 
 end

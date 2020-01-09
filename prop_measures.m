@@ -89,7 +89,7 @@ function [y]=prop_measures(Xn,S_new,Prr0,Prm0,Pmm0,cam_params,Rn)
                 h_i=[h_xi,h_pi];
                 
                 columns_extraction_i=reshape(3*vis(i)-2+(0:2)',[],1);
-                Pn_i=[Prr,Prm(:,columns_extraction_i);Prm(:,columns_extraction_i)',Pmm(columns_extraction_i,columns_extraction_i)];
+                Pn_i=[Prr0,Prm0(:,columns_extraction_i);Prm0(:,columns_extraction_i)',Pmm0(columns_extraction_i,columns_extraction_i)];
 
                 y.sigma(i)=det(h_i*Pn_i*h_i'+Rn);
                 

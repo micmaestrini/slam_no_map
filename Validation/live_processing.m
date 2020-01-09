@@ -43,8 +43,8 @@ md_wr=3*sqrt(P_cwri);
 
 dk1=delta_x(17);
 dk2=delta_x(18);    
-md_k1=3*sqrt(Prrn1(13,13));
-md_k2=3*sqrt(Prrn1(14,14));
+md_k1=full(3*sqrt(Prrn1(13,13)));
+md_k2=full(3*sqrt(Prrn1(14,14)));
 
 
 %%

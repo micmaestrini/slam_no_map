@@ -42,8 +42,8 @@ vq=xqr-xq;
 measures=[xq-cam_params.hpix/2,-yq+cam_params.vpix/2,vq];
 features=binaryFeatures(filt_matchf1);
 
-figure
-showMatchedFeatures(I1gray,I1gray_R,filt_match1,filt_match2);
+% figure
+% showMatchedFeatures(I1gray,I1gray_R,filt_match1,filt_match2);
 
 
 end
