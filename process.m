@@ -2,6 +2,7 @@ function [dX]=process(t,X,params)
 
 mu=params.mu;
 
+
 x=X(1);
 y=X(2);
 z=X(3);
