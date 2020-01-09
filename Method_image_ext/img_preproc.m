@@ -1,9 +1,19 @@
-function [J2_L,J2_R,disparityMap]=img_preproc(renderer,img_index)
+function [frameLeftGray,frameRightGray,disparityMap]=img_preproc(renderer,img_index,cam_params)
+
+
+fx=cam_params.foc*cam_params.hpix/cam_params.Hf;
+fy=cam_params.foc*cam_params.vpix/cam_params.Vf;
+cam_1=cameraParameters('IntrinsicMatrix',[fx,0,0;0,fy,0;1024,972,1],'ImageSize',[1944,2048]);
+cam_2=cameraParameters('IntrinsicMatrix',[fx,0,0;0,fy,0;1024,972,1],'ImageSize',[1944,2048]);
+stereoParams = stereoParameters(cam_1,cam_2,eye(3),[1;0;0]);
+
+
 
 currentDir=pwd;
 folders_struct=split(currentDir,'\');
 
 images_root=strjoin({folders_struct{1:end-1}},'\');
+
 
 
 
@@ -16,19 +26,29 @@ frameName_R=char(strcat(filename_R,num2str(img_index),fft));
 
 
 I_RGB_L=imread(frameName_L);
-I_L=rgb2gray(I_RGB_L);
+% I_L=rgb2gray(I_RGB_L);
 % J_L=adapthisteq(I_L,'NumTiles',[64 64],'ClipLimit',0.1,'Distribution','rayleigh');
 % J2_L=wiener2(J_L);
-J2_L=I_L;
+% J2_L=I_L;
 
 % figure()
 %     imshowpair(I_L,J2_L,'montage');
      
 I_RGB_R=imread(frameName_R);
-I_R=rgb2gray(I_RGB_R);
+% I_R=rgb2gray(I_RGB_R);
 % J_R=adapthisteq(I_R,'NumTiles',[64 64],'ClipLimit',0.1,'Distribution','rayleigh');
 % J2_R=wiener2(J_R);
-J2_R=I_R;
+% J2_R=I_R;
+
+
+
+[J1_rect,J2_rect] = rectifyStereoImages(I_RGB_L,I_RGB_R,stereoParams);
+
+
+frameLeftGray = rgb2gray(J1_rect);
+frameRightGray = rgb2gray(J2_rect);
+    
+    
 
 % figure()
 %     imshowpair(I_R,J2_R,'montage');
@@ -36,7 +56,7 @@ J2_R=I_R;
 %     close all
 disparityRange=[208, 240];
 % disparityMap = disparityBM(wiener2(J2_L),wiener2(J2_R),'DisparityRange',disparityRange,'UniquenessThreshold',100,'BlockSize',5);
-disparityMap = disparitySGM((J2_L),(J2_R),'DisparityRange',disparityRange,'UniquenessThreshold',50);
+disparityMap = disparitySGM((frameLeftGray),(frameRightGray),'DisparityRange',disparityRange,'UniquenessThreshold',20);
 disparityMap=medfilt2(disparityMap);
 
 % figure()

@@ -316,14 +316,14 @@ ylabel(hAxes(5),'error [rad]');
 
 
 
-renderer='eevee';
+renderer='cycles_new';
 proc_method='default';
 
 Opt.Nup=5;
 Opt.Nnew=[20,1];
 
 % set initial frame for ekf process estimation:
-start_frame=1;
+start_frame=2;
 if start_frame~=1
     tf=(start_frame-1)*dt;
     options=odeset('AbsTol',1e-10,'RelTol',1e-12);
