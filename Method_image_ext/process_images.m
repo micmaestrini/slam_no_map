@@ -1,4 +1,4 @@
-function [yn]=process_images(renderer,frame,method,cam_params)
+function [yn,frameLeftGray]=process_images(renderer,frame,method,cam_params)
 
         [frameLeftGray,frameRightGray,disparityMap]=img_preproc(renderer,frame,cam_params);
         

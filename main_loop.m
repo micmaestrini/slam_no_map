@@ -11,16 +11,73 @@ lmkinfo.counter_prop=[];
 feats_list=single(zeros(0,64));
 
 loop=1;
-[y0]=process_images(renderer,loop+start_frame-2,proc_method,cam_params);
+[y0,frameLeftGray0]=process_images(renderer,loop+start_frame-2,proc_method,cam_params);
 
 for loop=1:147
     
-     xn=sim_states(x0,dt,params);
-    [yn]=process_images(renderer,loop+start_frame-1,proc_method,cam_params);
-    
+    xn=sim_states(x0,dt,params);
+    [yn,frameLeftGrayn]=process_images(renderer,loop+start_frame-1,proc_method,cam_params);
     indexPairs = matchFeatures(y0.feats,yn.feats);
-    %matched across time instants:
+    
+    [Xn]=prop_states(X0,dt,params);
+    [hn]=new_meas(y0,X0,Xn,cam_params,indexPairs);
+    h0=p0(indexPairs(:,1));
+    
+    mn=reshape(hn',[],1);
+    %
+    p0=reshape(y0.z,3,[])';
+    pn=reshape(yn.z,3,[])';
+    
+    
+    % covariance computation step:
+    Phi0=STM(X0,dt);
+    Prrn=Phi0*Prr0*Phi0'+Q;
+    
+    
+    
+    
+    
+    
+    %     % debug matching across time instants:
+    
+    %     p0=reshape(y0.z,3,[])';
+    %     pn=reshape(yn.z,3,[])';
+    %     figure
+    %     showMatchedFeatures(frameLeftGray0,frameLeftGrayn,p0(indexPairs(:,1),1:2),pn(indexPairs(:,2),1:2));
+    
     %%
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     [S0,Prm0,Pmm0]=add_points(X0,y0,Prr0,Prm0,Pmm0,R,cam_params,indexPairs);
     
@@ -28,7 +85,7 @@ for loop=1:147
     
     % propagate covariance:
     % covariance propagation step:
-    Phi0=STM(X0,dt);
+    
     % state only covariance propagation:
     Prrn=Phi0*Prr0*Phi0'+Q;
     % mixed state landmarks covariance propagation:
@@ -49,15 +106,15 @@ for loop=1:147
     X0=Xn1;
     x0=xn;
     
-        S0=zeros(0,3);
+    S0=zeros(0,3);
     Prr0=0.5*(Prrn1+Prrn1');
     Prm0=sparse(zeros(14,3*size(S0,1)));
     Pmm0=sparse(zeros(3*size(S0,1)));
-
+    
     
     
     live_processing;
-   
+    
     
 end
 %%

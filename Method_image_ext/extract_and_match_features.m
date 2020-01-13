@@ -7,14 +7,14 @@ blobs1H = detectHarrisFeatures(I1gray);
 
 [a,b]=sort(blobs1H.Metric,'desc');
 sorted_blobs1=blobs1H(b);
-sorted_blobs1=selectStrongest(blobs1H,min(100,size(blobs1H,1)));
+sorted_blobs1=selectStrongest(blobs1H,min(20,size(blobs1H,1)));
 
 blobs2H = detectHarrisFeatures(I1gray_R);
 % blobs2H = detectSURFFeatures(I1gray_R);
 
 [a,b]=sort(blobs2H.Metric,'desc');
 sorted_blobs2=blobs2H(b);
-sorted_blobs2=selectStrongest(blobs2H,min(100,size(blobs2H,1)));
+sorted_blobs2=selectStrongest(blobs2H,min(20,size(blobs2H,1)));
 
 % features extraction
 [feats1HK, valid_points1_HK]=extractFeatures(I1gray,sorted_blobs1,'Method','FREAK','FeatureSize',128);
