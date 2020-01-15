@@ -32,8 +32,8 @@ close all
         
         P_i0=simplify(C_TB0*m0-C_TL0*[x0;y0;z0]);
         
-        syms wx0 wy0 wz0 k10 k20
-        dP0i_dx0=simplify(jacobian(P_i0,[x0;y0;z0;s0;wx0;wy0;wz0;k10;k20]));
+        syms wx0 wy0 wz0 k10 k20 vx0 vy0 vz0
+        dP0i_dx0=simplify(jacobian(P_i0,[x0;y0;z0;vx0;vy0;vz0;wx0;wy0;wz0;s0;k10;k20]));
         dP0i_dm0=simplify(jacobian(P_i0,m0));
         
         syms X0i Y0i Z0i
@@ -59,9 +59,9 @@ close all
         P_in=simplify(C_BTn*P0i+C_BLn*[xn;yn;zn]);
         
         
-        syms wxn wyn wzn k1n k2n
+        syms wxn wyn wzn k1n k2n vxn vyn vzn
         
-        dPni_dxn=simplify(jacobian(P_in,[xn;yn;zn;sn;wxn;wyn;wzn;k1n;k2n]));
+        dPni_dxn=simplify(jacobian(P_in,[xn;yn;zn;vxn;vyn;vzn;wxn;wyn;wzn;sn;k1n;k2n]));
         dPni_dP0i=simplify(jacobian(P_in,P0i));
         
 %%

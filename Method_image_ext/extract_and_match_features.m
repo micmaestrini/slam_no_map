@@ -2,14 +2,14 @@ function  [features, measures]=extract_and_match_features(I1gray,I1gray_R,cam_pa
 
 
 % features detection:
-blobs1H = detectHarrisFeatures(I1gray,'MinQuality',0.1,'FilterSize',5);
+blobs1H = detectHarrisFeatures(I1gray,'MinQuality',0.4,'FilterSize',5);
 % blobs1H = detectSURFFeatures(I1gray);
 
 [a,b]=sort(blobs1H.Metric,'desc');
 sorted_blobs1_f=blobs1H(b);
 % sorted_blobs1_f=selectStrongest(blobs1H,min(20,size(blobs1H,1)));
 
-blobs2H = detectHarrisFeatures(I1gray_R,'MinQuality',0.1,'FilterSize',5);
+blobs2H = detectHarrisFeatures(I1gray_R,'MinQuality',0.4,'FilterSize',5);
 % blobs2H = detectSURFFeatures(I1gray_R);
 
 [a,b]=sort(blobs2H.Metric,'desc');
@@ -17,10 +17,10 @@ sorted_blobs2_f=blobs2H(b);
 % sorted_blobs2_f=selectStrongest(blobs2H,min(20,size(blobs2H,1)));
 
 % features extraction
-% [feats1HK, valid_points1_HK]=extractFeatures(I1gray,sorted_blobs1_f,'Method','FREAK','FeatureSize',128);
-% [feats2HK, valid_points2_HK]=extractFeatures(I1gray_R,sorted_blobs2_f,'Method','FREAK','FeatureSize',128);
-[feats1HK, valid_points1_HK]=extractFeatures(I1gray,sorted_blobs1_f,'Method','Block');
-[feats2HK, valid_points2_HK]=extractFeatures(I1gray_R,sorted_blobs2_f,'Method','Block');
+[feats1HK, valid_points1_HK]=extractFeatures(I1gray,sorted_blobs1_f,'Method','FREAK','FeatureSize',128);
+[feats2HK, valid_points2_HK]=extractFeatures(I1gray_R,sorted_blobs2_f,'Method','FREAK','FeatureSize',128);
+% [feats1HK, valid_points1_HK]=extractFeatures(I1gray,sorted_blobs1_f,'Method','Block');
+% [feats2HK, valid_points2_HK]=extractFeatures(I1gray_R,sorted_blobs2_f,'Method','Block');
 
 % features matching
 indexPairs = matchFeatures(feats1HK,feats2HK);

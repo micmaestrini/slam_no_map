@@ -178,7 +178,7 @@ sp=1/sqrt(12);
 %% Filter Parameters:
 
 % Measure noise covariance:
-R=sparse(sp^2*eye(3));
+R=sparse(diag([sp^2;sp^2;2*sp^2]));
 
 % Process noise covariance:
 Q=sparse(1e-7*eye(14));
@@ -329,5 +329,6 @@ if start_frame~=1
     options=odeset('AbsTol',1e-10,'RelTol',1e-12);
     [T,Y]=ode113(@(t,y) process(t,y,params),[0,tf],x0,options);
     x0=Y(end,:)';
-    X0=x0+er;
+%     X0=x0+er;
+    X0=x0;
 end

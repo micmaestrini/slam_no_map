@@ -21,19 +21,25 @@ for loop=1:147
     
     [Xn]=prop_states(X0,dt,params);
     [hn]=new_meas(y0,X0,Xn,cam_params,indexPairs);
-    h0=p0(indexPairs(:,1));
+    %     h0=p0(indexPairs(:,1));
     
     mn=reshape(hn',[],1);
     %
     p0=reshape(y0.z,3,[])';
     pn=reshape(yn.z,3,[])';
+    figure
+    showMatchedFeatures(frameLeftGray0,frameLeftGrayn,p0(indexPairs(:,1),1:2),pn(indexPairs(:,2),1:2));
     
     
     % covariance computation step:
     Phi0=STM(X0,dt);
-    Prrn=Phi0*Prr0*Phi0'+Q;
+    P1=Phi0*Prr0*Phi0'+Q;
+    [A,B,C]=matrix_construction(X0,Xn,p0(indexPairs(:,1),:),cam_params);
     
+    RkCell = repmat({R}, 1, size(indexPairs,1));
+    Rk = blkdiag(RkCell{:});
     
+    Zn= A*P1*A' + B*P0*B' + A*Phi0*P0*B' + B*P0*Phi0*A' + C*Rk*C' +Rk;
     
     
     
@@ -42,40 +48,9 @@ for loop=1:147
     
     %     p0=reshape(y0.z,3,[])';
     %     pn=reshape(yn.z,3,[])';
-    %     figure
-    %     showMatchedFeatures(frameLeftGray0,frameLeftGrayn,p0(indexPairs(:,1),1:2),pn(indexPairs(:,2),1:2));
+    
     
     %%
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
