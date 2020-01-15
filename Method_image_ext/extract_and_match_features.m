@@ -1,15 +1,15 @@
-function  [features, measures]=extract_and_match_features(I1gray,I1gray_R,cam_params)
+function  [features, filt_match1, filt_match2]=extract_and_match_features(I1gray,I1gray_R,cam_params)
 
 
 % features detection:
-blobs1H = detectHarrisFeatures(I1gray,'MinQuality',0.4,'FilterSize',5);
+blobs1H = detectHarrisFeatures(I1gray,'MinQuality',0.1,'FilterSize',5);
 % blobs1H = detectSURFFeatures(I1gray);
 
 [a,b]=sort(blobs1H.Metric,'desc');
 sorted_blobs1_f=blobs1H(b);
 % sorted_blobs1_f=selectStrongest(blobs1H,min(20,size(blobs1H,1)));
 
-blobs2H = detectHarrisFeatures(I1gray_R,'MinQuality',0.4,'FilterSize',5);
+blobs2H = detectHarrisFeatures(I1gray_R,'MinQuality',0.1,'FilterSize',5);
 % blobs2H = detectSURFFeatures(I1gray_R);
 
 [a,b]=sort(blobs2H.Metric,'desc');
@@ -41,8 +41,10 @@ filt_match2=matchedPoints2_HK(filter);
 filt_matchf1=matchedFeats1_HK(filter,:);
 
 xq=filt_match1.Location(:,1);
+yq=filt_match1.Location(:,2);
+
 xqr=filt_match2.Location(:,1);
-yq=filt_match2.Location(:,2);
+
 vq=xqr-xq;
 
 measures=[xq-cam_params.hpix/2,-yq+cam_params.vpix/2,vq];
@@ -54,14 +56,14 @@ else
 end
     
 
-figure
-imshowpair(I1gray,I1gray_R,'montage');
-hold on
-plot(sorted_blobs1_f)
-plot(sorted_blobs2_f)
-
-figure
-showMatchedFeatures(I1gray,I1gray_R,filt_match1,filt_match2);
+% figure
+% imshowpair(I1gray,I1gray_R,'montage');
+% hold on
+% plot(sorted_blobs1_f)
+% plot(sorted_blobs2_f)
+% 
+% figure
+% showMatchedFeatures(I1gray,I1gray_R,filt_match1,filt_match2);
 
 
 end

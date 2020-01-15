@@ -173,7 +173,7 @@ sk=K*sqrt(0.1);
 % Camera noise, normal distribution
 sp=1/sqrt(12);
 % sp=0.17;
-% sp=1;
+sp=1;
 
 %% Filter Parameters:
 

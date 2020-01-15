@@ -1,8 +1,9 @@
-function [feats_HK, measures]=extract_features(J,disparityMap,cam_params)
+function [feats_HK, measures,filt_match1]=extract_features(J,disparityMap,cam_params)
 
 
 % blobs = detectHarrisFeatures(J,'MinQuality',0.05);
 blobs = detectSURFFeatures(J);
+filt_match1=[];
 
 [~,b]=sort(blobs.Metric,'desc');
 sorted_blobs=blobs(b);
