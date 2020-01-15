@@ -42,8 +42,9 @@ I_RGB_R=imread(frameName_R);
 
 
 
-[J1_rect,J2_rect] = rectifyStereoImages(I_RGB_L,I_RGB_R,stereoParams);
-
+% [J1_rect,J2_rect] = rectifyStereoImages(I_RGB_L,I_RGB_R,stereoParams);
+J1_rect=I_RGB_L;
+J2_rect=I_RGB_R;
 
 frameLeftGray = rgb2gray(J1_rect);
 frameRightGray = rgb2gray(J2_rect);

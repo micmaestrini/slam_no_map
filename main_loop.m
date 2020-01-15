@@ -30,6 +30,8 @@ for loop=1:147
     figure
     showMatchedFeatures(frameLeftGray0,frameLeftGrayn,p0(indexPairs(:,1),1:2),pn(indexPairs(:,2),1:2));
     
+    mea_0=reshape(p0(indexPairs(:,1),:)',[],1);
+    mea_n=reshape(pn(indexPairs(:,2),:)',[],1);
     
     % covariance computation step:
     Phi0=STM(X0,dt);
@@ -40,7 +42,7 @@ for loop=1:147
     Rk = blkdiag(RkCell{:});
     
     Zn= A*Prrn*A' + B*Prr0*B' + A*Phi0*P0*B' + B*P0*Phi0*A' + C*Rk*C' +Rk;
-    zn=reshape(pn(indexPairs(:,1),:)',[],1)-h_x;
+    zn=reshape(pn(indexPairs(:,2),:)',[],1)-h_x;
     
     % update step
     staten=Xn([1:6,11:18]);
