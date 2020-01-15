@@ -1,4 +1,4 @@
-function [A,B,C]=matrix_construction(X0,Xn,Y0,cam_params)
+function [A,B,C,h_x]=matrix_construction(X0,Xn,Y0,cam_params)
 %% data extraction
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 xn=Xn(1);
@@ -33,6 +33,7 @@ C_size=3*size(Y0,1);
 A=sparse(zeros(A_size,14));
 B=sparse(zeros(B_size,14));
 C=sparse(zeros(C_size,C_size));
+h_x=zeros(3*size(Y0,1),1);
 
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -84,6 +85,7 @@ for i=1:size(Y0,1)
     p30=cam_params.alpha_u*cam_params.b/d0;
     P_i0=(C_TB0*[p10;p20;p30]-x_t_c_T);
     P_in=(C_BTn*P_i0+x_t_c_C);
+    hn=[cam_params.u0-cam_params.alpha_u*P_in(1)/P_in(3);cam_params.v0-cam_params.alpha_v*P_in(2)/P_in(3);cam_params.alpha_u*cam_params.b/P_in(3)];
     
     dhi_dxn = jacobian_meas_n_state_n(P_i0(1),P_in(1),P_i0(2),P_in(2),P_i0(3),P_in(3),cam_params.alpha_u,cam_params.alpha_v,cam_params.b,fn,scn1,scn2,scn3,sn1,sn2,sn3);
     dh_dy0 = jacobian_meas_n_meas_0(P_in(1),P_in(2),P_in(3),cam_params.alpha_u,cam_params.alpha_v,cam_params.b,d0,s01,s02,s03,sn1,sn2,sn3,cam_params.u0,u0,cam_params.v0,v0);
@@ -96,6 +98,8 @@ for i=1:size(Y0,1)
     A(1+(i-1)*3:(i)*3,:)=dhi_dxn;
     B(1+(i-1)*3:(i)*3,:)=dh_dxin*dxin_dxi0*dxi0_dx0;
     C(1+(i-1)*3:(i)*3,1+(i-1)*3:(i)*3)=dh_dy0;
+    
+    h_x(1+(i-1)*3:(i)*3)=hn;
     
 end
 

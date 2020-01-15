@@ -8,7 +8,7 @@ dy_=delta_x(2);
 dz_=delta_x(3);
 dr=norm(delta_x(1:3));
         
-cov_r=Prrn1(1:3,1:3);
+cov_r=Prr1(1:3,1:3);
 dr_x=[2*dx_;2*dy_;2*dz_]'/dr;
 P_cri=dr_x*cov_r*dr_x';
 md_r=3*sqrt(P_cri);
@@ -20,7 +20,7 @@ dvy_=delta_x(5);
 dvz_=delta_x(6);
 dvr=norm(delta_x(4:6));
         
-cov_vr=Prrn1(4:6,4:6);
+cov_vr=Prr1(4:6,4:6);
 dvr_x=[2*dvx_;2*dvy_;2*dvz_]'/dvr;
 P_cvri=dvr_x*cov_vr*dvr_x';
 md_vr=3*sqrt(P_cvri);
@@ -33,7 +33,7 @@ dwy_=delta_x(12);
 dwz_=delta_x(13);
 dwr=norm(delta_x(11:13));
         
-cov_wr=Prrn1(7:9,7:9);
+cov_wr=Prr1(7:9,7:9);
 dwr_x=[2*dwx_;2*dwy_;2*dwz_]'/dwr;
 P_cwri=dwr_x*cov_wr*dwr_x';
 md_wr=3*sqrt(P_cwri);
